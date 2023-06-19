@@ -18,7 +18,11 @@ module.exports.getUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные' });
+      } else {
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
+      }
     });
 };
 
@@ -41,7 +45,7 @@ module.exports.createUser = (req, res) => {
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: `Пользователь c id: ${req.user._id} не найден` });
