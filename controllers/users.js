@@ -48,7 +48,7 @@ module.exports.updateUserInfo = (req, res) => {
     .catch((err) => {
       if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Пользователь c id: ${req.params.userId} не найден` });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
@@ -66,7 +66,7 @@ module.exports.updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Пользователь c id: ${req.params.userId} не найден` });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'CastError' || err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
         res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
