@@ -13,12 +13,12 @@ module.exports.getUser = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Пользователь c id: ${req.params.userId} не найден` });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
 };
@@ -28,12 +28,12 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ message: 'Новый пользователь создан ' }, user))
+    .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка ${err.name}` });
       }
     });
 };
@@ -46,12 +46,12 @@ module.exports.updateUserInfo = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Пользователь c id: ${req.params.userId} не найден` });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
 };
@@ -64,12 +64,12 @@ module.exports.updateUserAvatar = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Пользователь c id: ${req.params.userId} не найден` });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
 };

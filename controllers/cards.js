@@ -12,12 +12,12 @@ module.exports.getCards = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user })
-    .then((card) => res.status(201).send({ message: 'Новая карточка создана ' }, card))
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
 };
@@ -28,12 +28,12 @@ module.exports.deleteCard = (req, res) => {
     .orFail(new Error('NotValidId'))
     .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === 'NotValidId') {
+      if (err.message === 'NotValidId') {
         res.status(404).send({ message: `Карточка c id: ${req.params.cardId} не найдена` });
       } else if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные' });
       } else {
-        res.status(500).send({ message: 'На сервере произошла ошибка' });
+        res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
 };
@@ -46,12 +46,12 @@ module.exports.likeCard = (req, res) => Card.findByIdAndUpdate(
 ).orFail(new Error('NotValidId'))
   .then((card) => res.send(card))
   .catch((err) => {
-    if (err.name === 'NotValidId') {
+    if (err.message === 'NotValidId') {
       res.status(404).send({ message: `Карточка c id: ${req.params.cardId} не найдена` });
     } else if (err.name === 'CastError') {
       res.status(400).send({ message: 'Переданы некорректные данные' });
     } else {
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
     }
   });
 
@@ -63,11 +63,11 @@ module.exports.dislikeCard = (req, res) => Card.findByIdAndUpdate(
 ).orFail(new Error('NotValidId'))
   .then((card) => res.send(card))
   .catch((err) => {
-    if (err.name === 'NotValidId') {
+    if (err.message === 'NotValidId') {
       res.status(404).send({ message: `Карточка c id: ${req.params.cardId} не найдена` });
     } else if (err.name === 'CastError') {
       res.status(400).send({ message: 'Переданы некорректные данные' });
     } else {
-      res.status(500).send({ message: 'На сервере произошла ошибка' });
+      res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
     }
   });
