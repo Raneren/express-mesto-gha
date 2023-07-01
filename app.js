@@ -12,11 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-// Временное решение авторизации
-app.use((req, res, next) => {
-  req.user = { _id: '648c67d56b70436cdc8bd4be' };
-  next();
-});
 app.post('/signin', login);
 app.post('/signup', createUser);
 app.use(auth);

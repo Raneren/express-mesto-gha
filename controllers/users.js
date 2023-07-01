@@ -10,7 +10,7 @@ module.exports.getUsers = (req, res) => {
 };
 
 // Получить пользователя по id
-module.exports.getUser = (req, res) => {
+module.exports.getUserById = (req, res) => {
   User.findById(req.params.userId)
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
@@ -23,6 +23,13 @@ module.exports.getUser = (req, res) => {
         res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` });
       }
     });
+};
+
+// Получить данные авторизованного пользователя
+module.exports.getUserInfo = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.send(user))
+    .catch((err) => res.status(500).send({ message: `На сервере произошла ошибка: ${err.name}` }));
 };
 
 // Создать пользователя

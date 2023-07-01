@@ -24,8 +24,15 @@ module.exports.createCard = (req, res) => {
 
 // Удалить карточку
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail(new Error('NotValidId'))
+    // eslint-disable-next-line consistent-return
+    .then((card) => {
+      if (JSON.stringify(card.owner) === JSON.stringify(req.user._id)) {
+        return Card.deleteOne(card);
+      }
+      res.send({ message: 'Вы не можете удалить карточку, созданную другим пользователем' });
+    })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.message === 'NotValidId') {
