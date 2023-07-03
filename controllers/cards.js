@@ -25,7 +25,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (JSON.stringify(card.owner) === JSON.stringify(req.user._id)) {
         return Card.deleteOne(card);
       }
-      res.send({ message: 'Вы не можете удалить карточку, созданную другим пользователем' });
+      res.status(403).send({ message: 'Вы не можете удалить карточку, созданную другим пользователем' });
     })
     .then((card) => res.send(card))
     .catch(next);
