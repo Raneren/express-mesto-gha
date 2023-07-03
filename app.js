@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -29,6 +29,7 @@ app.use(auth);
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/cards'));
 
+app.use(errors());
 app.use((err, req, res, next) => {
   if (err.name === 'CastError' || err.name === 'ValidationError') {
     res.status(400).send({ message: 'Переданы некорректные данные' });
