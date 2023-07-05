@@ -37,7 +37,7 @@ app.use(errors());
 app.use('/', (req, res, next) => {
   next(new NotFoundError('Такой страницы не существует'));
 });
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
   if (err.name === 'CastError' || err.name === 'ValidationError') {
@@ -51,6 +51,7 @@ app.use((err, req, res) => {
         : message,
     });
   }
+  next();
 });
 
 app.listen(PORT, () => {
