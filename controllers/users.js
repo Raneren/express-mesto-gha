@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-error');
 
 // Получить всех пользователей
 module.exports.getUsers = (req, res, next) => {
@@ -12,7 +13,7 @@ module.exports.getUsers = (req, res, next) => {
 // Получить пользователя по id
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail(new Error('NotValidUserId'))
+    .orFail(new NotFoundError(`Пользователь с id: ${req.params.userId} не найден`))
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -49,7 +50,7 @@ module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
-    .orFail(new Error('NotValidUserId'))
+    .orFail(new NotFoundError(`Пользователь с id: ${req.params.userId} не найден`))
     .then((user) => res.send(user))
     .catch(next);
 };
@@ -58,8 +59,8 @@ module.exports.updateUserInfo = (req, res, next) => {
 module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
-    .orFail(new Error('NotValidUserId'))
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+    .orFail(new NotFoundError(`Пользователь с id: ${req.params.userId} не найден`))
     .then((user) => res.send(user))
     .catch(next);
 };
